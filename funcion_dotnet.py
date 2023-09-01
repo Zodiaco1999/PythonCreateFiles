@@ -21,14 +21,14 @@ complementos = [ 'Controller', 'Response']
 complementos_command.extend(complementos)
 complementos_query.extend(complementos)
     
-name_space = f'namespace SEG.MENU.Aplicacion.Funcionalidades.{entidad_plural}'
+name_space = f'namespace SGDP.PLUS.SEG.Aplicacion.Funcionalidades.{entidad_plural}'
 u_mediat_r = 'using MediatR;\n'
 u_entidad = name_space.replace('namespace', 'using')
 u_logica_negocio = name_space.replace('namespace', 'using') + '.LogicaNegocio;\n'
 u_microsoft = 'using Microsoft.AspNetCore.Mvc;\n'
-u_seg_comun = 'using SEG.Comun.General;\n'
-u_seg_menu_entidades = 'using SEG.MENU.Dominio.Entidades;\n'
-u_unit_of_work = 'using SEG.MENU.Infraestructura.UnidadTrabajo;\n'
+u_seg_comun = 'using SGDP.PLUS.Comun.General;\n'
+u_seg_menu_entidades = 'using SGDP.PLUS.SEG.Dominio.Entidades;\n'
+u_unit_of_work = 'using SGDP.PLUS.SEG.Infraestructura.UnidadTrabajo;\n'
 p_record = 'public record struct '
 p_class = 'public class '
 p_interface = 'public interface '
@@ -145,7 +145,7 @@ def crear_archivo_logica(carpeta, nombre_clase):
     ctor = f'public {nombre_clase}'
     # Crear Archivo Especificacion
     if carpeta == 'Especificacion':
-        clase.write(f'using SEG.Comun.Especificacionbase;\n{u_seg_menu_entidades}{n}{new_name_space + p_class + nombre_clase} : SpecificationBase<{entidad_singular}>' +
+        clase.write(f'using SGDP.PLUS.Comun.Especificacionbase;\n{u_seg_menu_entidades}{n}{new_name_space + p_class + nombre_clase} : SpecificationBase<{entidad_singular}>' +
             f'{lla + ctor}(string textoBusqueda, int? pagina = null, int? registrosPorPagina = null, string ordenarPor = null, string direccionOrdenamiento = "asc")' +
             f'{lla2}Criteria = BusquedaTextoCompleto(textoBusqueda).SatisfiedBy();{llc2 + n_n + _}private ISpecificationCriteria<{entidad_singular}> BusquedaTextoCompleto(string texto)' +
             f"{lla2}SpecificationCriteria<{entidad_singular}> especificacion = new SpecificationCriteriaTrue<{entidad_singular}>();{n_n + _*2}var spl = texto.ToLower().Trim().Split(' ');{n_n}" +
@@ -169,7 +169,7 @@ def crear_archivo_logica(carpeta, nombre_clase):
         for c in carpetas:
             if c != carpeta:
                 usings += f'{u_entidad}.{c};\n'
-        clase.write(f'using Ardalis.GuardClauses;\nusing SEG.Comun.ContextAccesor;\n{u_seg_comun + usings + u_seg_menu_entidades + u_unit_of_work + n}' +
+        clase.write(f'using Ardalis.GuardClauses;\nusing SGDP.PLUS.Comun.ContextAccesor;\n{u_seg_comun + usings + u_seg_menu_entidades + u_unit_of_work + n}' +
             f'{new_name_space + p_class + nombre_clase} : BaseAppService, {i_gestion + lla + p_readonly + i_repo_lectura}_{v_repo_lectura};{n + _ + p_readonly}' +
             f'{i_repo_escritura}_{v_repo_escritura};{n + _ + p_readonly + i_unit_work_write} _unitOfWork;{n + _ + p_readonly}IContextAccessor _contextAccessor;' +
             f'{n_n + _ + ctor}({n + _*2 + i_repo_lectura + v_repo_lectura},{n + _*2 + i_repo_escritura + v_repo_escritura},{n + _*2 + i_unit_work_write}' +
@@ -181,11 +181,11 @@ def crear_archivo_logica(carpeta, nombre_clase):
         # Crear Interface Repositorio
         nombre_interface = 'I' + nombre_clase
         interface = open(f'{carpeta_funcion}\{carpeta}\{nombre_interface}.cs', 'w')
-        interface.write(f'using SEG.Comun.Repositorios;\n{u_seg_menu_entidades + n + new_name_space + p_interface + nombre_interface} : ' +
+        interface.write(f'using SGDP.PLUS.Comun.Repositorios;\n{u_seg_menu_entidades + n + new_name_space + p_interface + nombre_interface} : ' +
             f'IRepositoryAsync<{entidad_singular}>{n}{{{n}}}')
         interface.close()
         # Crear Clase Repositorio
-        clase.write(f'using SEG.Comun.Repositorios;\n{u_seg_menu_entidades + u_unit_of_work + n + new_name_space + p_class + nombre_clase} : ' +
+        clase.write(f'using SGDP.PLUS.Comun.Repositorios;\n{u_seg_menu_entidades + u_unit_of_work + n + new_name_space + p_class + nombre_clase} : ' +
             f'Repository<{entidad_singular}>, {nombre_interface + lla + ctor}({i_unit_work_write} unitOfWork) : base(unitOfWork){n + _}{{{n + _}}}{n}}}')
     clase.close()
 
